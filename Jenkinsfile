@@ -6,14 +6,14 @@ pipeline {
         stage('Build') {
             agent{
                 docker{
-                    image 'node:18-alpine'
+                    image 'node:18-slim'
                     reuseNode true
                 }
             }
             
            
             steps {
-                cleanWs()
+              
                 sh '''
                     
                     ls -la
