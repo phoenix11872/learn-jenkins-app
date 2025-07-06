@@ -25,40 +25,46 @@ pipeline {
             }
         }
         */
-        stage('Test')
+        stage('Run Tests')
         {
-            agent{
-                docker{
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps{
-                sh '''
-                    echo "Test Stage"
-                    test -f build/index.html
-                    npm test
-                '''
+            parallel{
+                 stage('Unit Test')
+                    {
+                        agent{
+                            docker{
+                                image 'node:18-alpine'
+                                reuseNode true
+                            }
+                        }
+                        steps{
+                            sh '''
+                                echo "Test Stage"
+                                test -f build/index.html
+                                npm test
+                            '''
+                        }
+                    }
+                    stage('E2E test')
+                    {
+                        agent{
+                            docker{
+                                image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                                reuseNode true
+                                args '-u root:root'
+                            }
+                        }
+                        steps{
+                            sh '''
+                                npm i serve
+                                node_modules/.bin/serve -s build &
+                                sleep 10
+                                npx playwright test --reporter=html
+                            '''
+                        }
+                    }
             }
         }
-        stage('E2E test')
-        {
-            agent{
-                docker{
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                    args '-u root:root'
-                }
-            }
-            steps{
-                sh '''
-                    npm i serve
-                    node_modules/.bin/serve -s build &
-                    sleep 10
-                    npx playwright test --reporter=html
-                '''
-            }
-        }
+       
         
     }
     post{
