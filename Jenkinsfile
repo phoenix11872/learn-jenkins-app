@@ -11,14 +11,16 @@ pipeline {
                 }
             }
             
-            
+           
             steps {
+                cleanWS()
                 sh '''
-                    cleanWS()
+                    
                     ls -la
                     node --version
                     npm --version
-                    npm i
+                    rm -rf node_modules package-lock.json 
+                    npm ci 
                     npm run build
                     ls -la
                     
