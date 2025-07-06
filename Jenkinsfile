@@ -16,7 +16,7 @@ pipeline {
             
            
             steps {
-              
+               cleanWs()
                 sh '''
                     
                     ls -la
