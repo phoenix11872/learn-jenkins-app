@@ -23,7 +23,7 @@ pipeline {
             steps {
                 checkout scm
                 sh '''
-                    
+                    echo 'Small Change'
                     ls -la
                     node --version
                     npm --version
