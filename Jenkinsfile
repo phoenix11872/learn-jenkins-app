@@ -6,7 +6,11 @@ pipeline {
     }
 
     stages {
-        
+        stage('Cleanup'){
+            steps{
+                cleanWs()
+            }
+        }
         stage('Build') {
             agent{
                 docker{
@@ -17,7 +21,7 @@ pipeline {
             
            
             steps {
-           
+                checkout scm
                 sh '''
                     
                     ls -la
