@@ -10,11 +10,16 @@ pipeline {
         stage('Cleanup'){
             steps{
                 cleanWs()
+                checkout scm
             }
         }
         stage('Docker'){
             steps{
-                sh 'docker build -t myplaywright .'
+                sh '''
+                    ls -la
+                    docker build -t myplaywright .
+                
+                '''
             }
         }
         stage('Build') {
@@ -27,7 +32,7 @@ pipeline {
             
            
             steps {
-                checkout scm
+                
                 sh '''
                     echo 'Small Change'
                     ls -la
