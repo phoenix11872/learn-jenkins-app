@@ -12,6 +12,11 @@ pipeline {
                 cleanWs()
             }
         }
+        stage('Docker'){
+            steps{
+                sh 'docker build -t MyPlaywright .'
+            }
+        }
         stage('Build') {
             agent{
                 docker{
