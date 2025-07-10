@@ -13,15 +13,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Docker'){
-            steps{
-                sh '''
-                    ls -la
-                    docker build -t myplaywright .
-                
-                '''
-            }
-        }
+        
         stage('Build') {
             agent{
                 docker{
@@ -77,12 +69,10 @@ pipeline {
                             docker{
                                 image 'myplaywright'
                                 reuseNode true
-                                
                             }
                         }
                         steps{
                             sh '''
-                                
                                 serve -s build &
                                 sleep 10
                                 npx playwright test --reporter=html
@@ -144,7 +134,6 @@ pipeline {
                 }
                 steps{
                     sh '''
-                    
                     netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     netlify status
