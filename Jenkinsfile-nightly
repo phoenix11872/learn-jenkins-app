@@ -8,7 +8,7 @@ pipeline {
             steps{
                 sh '''
                     ls -la
-                    docker build -t myplaywright .
+                    docker build -f ci/Dockerfile -t myplaywright .
                 '''
             }
         }
