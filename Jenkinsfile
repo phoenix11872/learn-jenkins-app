@@ -3,6 +3,7 @@ pipeline {
     environment{
         
         REACT_APP_VERSION="1.0.$BUILD_ID"
+        APP_NAME='myjenkinsapp'
         AWS_DEFAULT_REGION= 'eu-north-1'
         AWS_ECS_CLUSTER='flawless-tiger-9u4fgn'
         AWS_ECS_SERVICE_PROD='LearnJenkinsApp-TaskDefinition-Prod-service-gsbdv9vi'
@@ -52,7 +53,7 @@ pipeline {
             steps{
                 sh'''
                 amazon-linux-extras install docker
-                docker build -t myjenkinsapp .
+                docker build -t $APP_NAME:$REACT_APP_VERSION .
                 '''
             }
         }
