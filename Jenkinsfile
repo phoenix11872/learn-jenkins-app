@@ -13,27 +13,6 @@ pipeline {
                 checkout scm
             }
         }
-        
-        stage('deploy to AWS'){
-            agent{
-                docker{
-                    image 'amazon/aws-cli'
-                    reuseNode true
-                    args "--entrypoint=''"
-                
-                }
-            }
-            
-            steps{
-                withCredentials([usernamePassword(credentialsId: 'my-aws-learning-s3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                    sh'''
-                        aws --version
-                        aws ecs register-task-definition --cli-input-json file://aws/task-definition.json
-                    '''
-                }
-                
-            }
-        }
         stage('Build') {
             agent{
                 docker{
@@ -58,6 +37,29 @@ pipeline {
                 '''
             }
         }
+        
+        stage('deploy to AWS'){
+            agent{
+                docker{
+                    image 'amazon/aws-cli'
+                    reuseNode true
+                    args "--entrypoint=''"
+                
+                }
+            }
+            
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'my-aws-learning-s3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+                    sh'''
+                        aws --version
+                        aws ecs register-task-definition --cli-input-json file://aws/task-definition.json
+                        aws ecs update-service --cluster flawless-tiger-9u4fgn --service LearnJenkinsApp-TaskDefinition-Prod-service-gsbdv9vi --task-definition LearnJenkinsApp-TaskDefinition-Prod:2
+                    '''
+                }
+                
+            }
+        }
+        
            
     }
     
